@@ -387,6 +387,42 @@
                 </div>
             </div>
         </main>
+
+        <!-- PERFIL DO PROFESSOR -->
+        <main id="teacher-profile" class="hidden">
+            <button class="mb-4 text-indigo-600 font-semibold" onclick="showView('teacher-dashboard')">&larr; Voltar para Minhas Turmas</button>
+            <h2 class="text-2xl font-bold mb-4">Perfil do Professor</h2>
+            <div class="bg-white p-6 rounded-xl shadow-md max-w-2xl">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Nome</label>
+                    <div id="teacher-profile-name" class="mt-1 text-gray-800 font-semibold">—</div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Email</label>
+                    <div id="teacher-profile-email" class="mt-1 text-gray-800">—</div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Especialização</label>
+                    <div id="teacher-profile-specialization" class="mt-1 text-gray-800">—</div>
+                </div>
+            </div>
+        </main>
+
+        <!-- PERFIL DO PEDAGOGO -->
+        <main id="pedagogue-profile" class="hidden">
+            <button class="mb-4 text-indigo-600 font-semibold" onclick="showView('pedagogue-dashboard')">&larr; Voltar para Consulta de Desempenho</button>
+            <h2 class="text-2xl font-bold mb-4">Perfil do Pedagogo</h2>
+            <div class="bg-white p-6 rounded-xl shadow-md max-w-2xl">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Nome</label>
+                    <div id="pedagogue-profile-name" class="mt-1 text-gray-800 font-semibold">—</div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Email</label>
+                    <div id="pedagogue-profile-email" class="mt-1 text-gray-800">—</div>
+                </div>
+            </div>
+        </main>
         
         <!-- DASHBOARD DO PROFESSOR -->
         <main id="teacher-dashboard" class="hidden">
@@ -979,7 +1015,7 @@
     };
 
     // --- Controle de Navegação ---
-    const views = ['login-view', 'student-dashboard', 'student-profile', 'teacher-dashboard', 'pedagogue-dashboard', 'teacher-class-details'];
+    const views = ['login-view', 'student-dashboard', 'student-profile', 'teacher-dashboard', 'teacher-profile', 'pedagogue-dashboard', 'pedagogue-profile', 'teacher-class-details'];
     const header = document.getElementById('main-header');
 
     function showView(viewId) {
@@ -1017,6 +1053,7 @@
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const role = roleSelector.value;
+        currentRole = role;
         if (role === 'student') {
             //welcomeMessage.textContent = `Olá, ${mockData.student.name}! Bem-vindo(a) de volta.`;
             showView('student-dashboard');
@@ -1030,15 +1067,45 @@
     });
 
     document.getElementById('logout-button').addEventListener('click', () => {
+        currentRole = null;
         showView('login-view');
     });
 
-    // abrir perfil do aluno pelo botão no header
+    // abrir perfil do usuário pelo botão no header
+    let currentRole = null; // aluno, professor, pedagogo
+    
     const profileBtn = document.getElementById('profile-button');
     if (profileBtn) {
         profileBtn.addEventListener('click', () => {
-            showView('student-profile');
+            if (currentRole === 'teacher') {
+                renderTeacherProfile();
+                showView('teacher-profile');
+            } else if (currentRole === 'pedagogue') {
+                renderPedagogueProfile();
+                showView('pedagogue-profile');
+            } else {
+                renderStudentProfile();
+                showView('student-profile');
+            }
         });
+    }
+
+    function renderTeacherProfile() {
+        const nameEl = document.getElementById('teacher-profile-name');
+        const emailEl = document.getElementById('teacher-profile-email');
+        const specializationEl = document.getElementById('teacher-profile-specialization');
+        if (!nameEl || !emailEl || !specializationEl) return;
+        nameEl.textContent = mockData.teacher.name || '—';
+        emailEl.textContent = mockData.teacher.email || '—';
+        specializationEl.textContent = 'Artes' || '—';
+    }
+
+    function renderPedagogueProfile() {
+        const nameEl = document.getElementById('pedagogue-profile-name');
+        const emailEl = document.getElementById('pedagogue-profile-email');
+        if (!nameEl || !emailEl) return;
+        nameEl.textContent = mockData.pedagogue.name || '—';
+        emailEl.textContent = mockData.pedagogue.email || '—';
     }
 
     // --- Lógica do Pedagogo ---
