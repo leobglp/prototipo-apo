@@ -405,7 +405,8 @@
             </div>
             <!-- Filtros das turmas (nome, ano, bimestre) -->
             <div class="bg-white p-4 rounded-xl shadow-md mb-4">
-                <form id="teacher-class-filter" class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end">
+
+                <form id="teacher-class-filter" class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end mb-4">
                     <div>
                         <label for="filter-class-name" class="block text-sm font-medium text-gray-700 mb-1">Nome da Turma</label>
                         <input id="filter-class-name" type="text" placeholder="Ex: Turma A" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
@@ -434,35 +435,33 @@
                         <button type="button" id="clear-class-filters" class="flex-1 min-w-0 bg-white border border-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-200">Limpar</button>
                     </div>
                 </form>
+
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <label for="classes-per-page" class="text-sm font-medium text-gray-700">Exibir</label>
+                        <select id="classes-per-page" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white">
+                            <option value="3">3</option>
+                            <option value="6" selected>6</option>
+                            <option value="9">9</option>
+                            <option value="12">12</option>
+                        </select>
+                        <span class="text-sm text-gray-500">por página</span>
+                    </div>
+                    <div class="text-sm text-gray-600">Total: <strong class="text-gray-800" id="total-classes">2</strong> turmas</div>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Card de Turma -->
-                <div class="bg-white p-6 rounded-xl shadow-md teacher-class-card" data-name="Turma A" data-year="2025" data-bimester="1">
-                    <h3 class="text-lg font-semibold border-b pb-2 mb-3">Turma A - Manhã (8 alunos)</h3>
-                    <p class="text-sm text-gray-500 mb-4">Prof. Regente: Você</p>
-                    <ul class="space-y-2 text-sm mb-4">
-                        <li>Ana Silva (Leve)</li>
-                        <li>Bruno Costa (Moderado)</li>
-                        <li>Carla Dias (Leve)</li>
-                        <li>...</li>
-                    </ul>
-                    <button class="w-full bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-md hover:bg-gray-300 transition" onclick="showView('teacher-class-details')">
-                        Ver Detalhes da Turma
-                    </button>
-                     </div>
-                      <div class="bg-white p-6 rounded-xl shadow-md teacher-class-card" data-name="Turma C" data-year="2025" data-bimester="2">
-                          <h3 class="text-lg font-semibold border-b pb-2 mb-3">Turma C - Tarde (6 alunos)</h3>
-                    <p class="text-sm text-gray-500 mb-4">Prof. Regente: Maria Oliveira</p>
-                     <ul class="space-y-2 text-sm mb-4">
-                        <li>Felipe Souza (Moderado)</li>
-                        <li>Gabriela Lima (Leve)</li>
-                        <li>...</li>
-                    </ul>
-                    <button class="w-full bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-md hover:bg-gray-300 transition" onclick="showView('teacher-class-details')">
-                        Ver Detalhes da Turma
-                    </button>
-                </div>
+            <div id="teacher-classes-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Cards de turmas serão renderizados aqui -->
+            </div>
+
+            <!-- Paginação -->
+            <div id="classes-pagination" class="mt-6 flex items-center justify-center hidden">
+                <nav class="inline-flex rounded-md shadow-sm" aria-label="Pagination">
+                    <button id="classes-prev-btn" class="px-3 py-1.5 rounded-l-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 text-sm">Anterior</button>
+                    <div id="classes-page-buttons" class="flex"></div>
+                    <button id="classes-next-btn" class="px-3 py-1.5 rounded-r-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 text-sm">Próximo</button>
+                </nav>
             </div>
         </main>
 
@@ -847,6 +846,18 @@
             { id: 'p4', name: 'Prof. Ana Paula', email: 'ana.paula@escola.com', specialization: 'Culinária' },
             { id: 'p5', name: 'Prof. Roberto Costa', email: 'roberto.costa@escola.com', specialization: 'Tecnologia' },
             { id: 'p6', name: 'Prof. Fernanda Lima', email: 'fernanda.lima@escola.com', specialization: 'Artesanato' }
+        ],
+        // Lista de turmas para o professor
+        allClasses: [
+            { id: 'c1', name: 'Turma A', period: 'Manhã', students: 8, headTeacher: 'Você', year: '2025', bimester: '1', studentList: ['Ana Silva (Leve)', 'Bruno Costa (Moderado)', 'Carla Dias (Leve)', 'Diana (Moderado)'] },
+            { id: 'c2', name: 'Turma B', period: 'Manhã', students: 7, headTeacher: 'Prof. João Silva', year: '2025', bimester: '1', studentList: ['Eduardo (Leve)', 'Fernanda (Leve)', 'Gustavo (Moderado)', 'Helena (Severo)'] },
+            { id: 'c3', name: 'Turma C', period: 'Tarde', students: 6, headTeacher: 'Prof. Maria Oliveira', year: '2025', bimester: '2', studentList: ['Felipe Souza (Moderado)', 'Gabriela Lima (Leve)', 'Henrique (Leve)', 'Iris (Moderado)'] },
+            { id: 'c4', name: 'Turma D', period: 'Tarde', students: 9, headTeacher: 'Prof. Carlos Mendes', year: '2025', bimester: '2', studentList: ['João (Leve)', 'Juliana (Moderado)', 'Kevin (Leve)', 'Laura (Severo)'] },
+            { id: 'c5', name: 'Turma E', period: 'Noite', students: 5, headTeacher: 'Prof. Ana Paula', year: '2024', bimester: '3', studentList: ['Mateus (Leve)', 'Mariana (Moderado)', 'Noel (Leve)'] },
+            { id: 'c6', name: 'Turma F', period: 'Noite', students: 8, headTeacher: 'Você', year: '2024', bimester: '3', studentList: ['Otávio (Moderado)', 'Patrícia (Leve)', 'Quentin (Leve)', 'Rita (Moderado)'] },
+            { id: 'c7', name: 'Turma G', period: 'Manhã', students: 7, headTeacher: 'Prof. Roberto Costa', year: '2023', bimester: '4', studentList: ['Samuel (Leve)', 'Sophia (Moderado)', 'Tiago (Leve)'] },
+            { id: 'c8', name: 'Turma H', period: 'Tarde', students: 6, headTeacher: 'Prof. Fernanda Lima', year: '2023', bimester: '4', studentList: ['Úrsula (Moderado)', 'Vitor (Leve)', 'Vanessa (Leve)'] },
+            { id: 'c9', name: 'Turma I', period: 'Noite', students: 8, headTeacher: 'Você', year: '2025', bimester: '1', studentList: ['Wagner (Leve)', 'Ximena (Moderado)', 'Yasmin (Leve)', 'Zoe (Moderado)'] }
         ]
     };
 
@@ -1315,34 +1326,155 @@
     const applyClassFiltersBtn = document.getElementById('apply-class-filters');
     const clearClassFiltersBtn = document.getElementById('clear-class-filters');
 
-    function applyTeacherClassFilters() {
+    // --- Lógica de Paginação do Dashboard do Professor ---
+    let currentClassPage = 1;
+    let itemsPerPage = 6;
+    let filteredClasses = [];
+
+    function renderTeacherClasses() {
+        const container = document.getElementById('teacher-classes-container');
+        if (!container) return;
+
         const name = (document.getElementById('filter-class-name').value || '').trim().toLowerCase();
         const year = (document.getElementById('filter-class-year').value || '').trim();
         const bimester = (document.getElementById('filter-class-bimester').value || '').trim();
 
-        document.querySelectorAll('.teacher-class-card').forEach(card => {
-            const cardName = (card.dataset.name || '').toLowerCase();
-            const cardYear = (card.dataset.year || '').toString();
-            const cardBimester = (card.dataset.bimester || '').toString();
-
+        // Filtrar turmas
+        filteredClasses = mockData.allClasses.filter(c => {
             let visible = true;
-            if (name && !cardName.includes(name)) visible = false;
-            if (year && cardYear !== year) visible = false;
-            if (bimester && cardBimester !== bimester) visible = false;
-
-            card.style.display = visible ? '' : 'none';
+            if (name && !c.name.toLowerCase().includes(name)) visible = false;
+            if (year && c.year !== year) visible = false;
+            if (bimester && c.bimester !== bimester) visible = false;
+            return visible;
         });
+
+        // Atualizar total
+        document.getElementById('total-classes').textContent = filteredClasses.length;
+
+        // Calcular paginação
+        const totalPages = Math.ceil(filteredClasses.length / itemsPerPage);
+        const startIdx = (currentClassPage - 1) * itemsPerPage;
+        const endIdx = startIdx + itemsPerPage;
+        const classesPage = filteredClasses.slice(startIdx, endIdx);
+
+        // Renderizar cards
+        container.innerHTML = '';
+        classesPage.forEach(c => {
+            const studentsPreview = c.studentList.slice(0, 3).join('<br>');
+            const hasMore = c.studentList.length > 3;
+            const classCard = document.createElement('div');
+            classCard.className = 'bg-white p-6 rounded-xl shadow-md';
+            classCard.innerHTML = `
+                <h3 class="text-lg font-semibold border-b pb-2 mb-3">${c.name} - ${c.period} (${c.students} alunos)</h3>
+                <p class="text-sm text-gray-500 mb-4">Prof. Regente: ${c.headTeacher}</p>
+                <ul class="space-y-2 text-sm mb-4">
+                    ${studentsPreview}
+                    ${hasMore ? '<li>...</li>' : ''}
+                </ul>
+                <button class="w-full bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-md hover:bg-gray-300 transition" onclick="showView('teacher-class-details')">
+                    Ver Detalhes da Turma
+                </button>
+            `;
+            container.appendChild(classCard);
+        });
+
+        // Renderizar paginação
+        updateClassesPagination(totalPages);
+    }
+
+    function updateClassesPagination(totalPages) {
+        const paginationContainer = document.getElementById('classes-pagination');
+        const pageButtonsContainer = document.getElementById('classes-page-buttons');
+        const prevBtn = document.getElementById('classes-prev-btn');
+        const nextBtn = document.getElementById('classes-next-btn');
+
+        if (totalPages <= 1) {
+            paginationContainer.classList.add('hidden');
+            return;
+        }
+
+        paginationContainer.classList.remove('hidden');
+
+        // Limpar buttons anteriores
+        pageButtonsContainer.innerHTML = '';
+
+        // Criar buttons de página
+        for (let i = 1; i <= totalPages; i++) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = `px-3 py-1.5 border-t border-b border-gray-300 text-sm ${
+                i === currentClassPage
+                    ? 'bg-indigo-600 text-white ring-2 ring-indigo-200'
+                    : 'bg-white text-gray-700 hover:bg-gray-50'
+            }`;
+            btn.textContent = i;
+            btn.addEventListener('click', () => {
+                currentClassPage = i;
+                renderTeacherClasses();
+            });
+            pageButtonsContainer.appendChild(btn);
+        }
+
+        // Atualizar buttons anterior/próximo
+        prevBtn.disabled = currentClassPage === 1;
+        prevBtn.className = `px-3 py-1.5 rounded-l-md border border-gray-300 text-sm ${
+            currentClassPage === 1
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : 'bg-white text-gray-700 hover:bg-gray-50'
+        }`;
+        prevBtn.onclick = () => {
+            if (currentClassPage > 1) {
+                currentClassPage--;
+                renderTeacherClasses();
+            }
+        };
+
+        nextBtn.disabled = currentClassPage === totalPages;
+        nextBtn.className = `px-3 py-1.5 rounded-r-md border border-gray-300 text-sm ${
+            currentClassPage === totalPages
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : 'bg-white text-gray-700 hover:bg-gray-50'
+        }`;
+        nextBtn.onclick = () => {
+            if (currentClassPage < totalPages) {
+                currentClassPage++;
+                renderTeacherClasses();
+            }
+        };
+    }
+
+    // Listeners para controles de paginação
+    const classesPerPageSelect = document.getElementById('classes-per-page');
+    if (classesPerPageSelect) {
+        classesPerPageSelect.addEventListener('change', (e) => {
+            itemsPerPage = parseInt(e.target.value);
+            currentClassPage = 1;
+            renderTeacherClasses();
+        });
+    }
+
+    // Atualizar paginação ao aplicar/limpar filtros
+    function applyTeacherClassFilters() {
+        currentClassPage = 1;
+        renderTeacherClasses();
     }
 
     function clearTeacherClassFilters() {
         document.getElementById('filter-class-name').value = '';
         document.getElementById('filter-class-year').value = '';
         document.getElementById('filter-class-bimester').value = '';
-        document.querySelectorAll('.teacher-class-card').forEach(card => card.style.display = '');
+        currentClassPage = 1;
+        renderTeacherClasses();
     }
 
+    // Remover listeners antigos e adicionar novos
+    if (applyClassFiltersBtn) applyClassFiltersBtn.removeEventListener('click', applyTeacherClassFilters);
+    if (clearClassFiltersBtn) clearClassFiltersBtn.removeEventListener('click', clearTeacherClassFilters);
     if (applyClassFiltersBtn) applyClassFiltersBtn.addEventListener('click', applyTeacherClassFilters);
     if (clearClassFiltersBtn) clearClassFiltersBtn.addEventListener('click', clearTeacherClassFilters);
+
+    // Renderizar turmas na inicialização
+    renderTeacherClasses();
 
     function closeAddActivityModal() {
         addActivityModal.classList.add('hidden');
