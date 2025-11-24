@@ -468,41 +468,65 @@
         <!-- DETALHES DA TURMA (PROFESSOR) -->
         <main id="teacher-class-details" class="hidden">
             <button class="mb-4 text-indigo-600 font-semibold" onclick="showView('teacher-dashboard')">&larr; Voltar para Minhas Turmas</button>
-            <h2 class="text-2xl font-bold mb-4">Detalhes da Turma A</h2>
-             <div class="bg-white p-6 rounded-xl shadow-md">
-                <h3 class="text-lg font-semibold mb-4">Atividade: Pintura com Aquarela - 03/09/2025</h3>
-                <p class="text-sm text-gray-500 mb-4">Clique no nome do aluno para lançar a avaliação de execução.</p>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead>
-                            <tr class="border-b">
-                                <th class="py-2">Aluno</th>
-                                <th class="py-2">Critério 1: Uso das cores</th>
-                                <th class="py-2">Critério 2: Coordenação</th>
-                                <th class="py-2">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="border-b">
-                                <td class="py-3 font-medium"><a href="#" class="text-indigo-600 hover:underline" onclick="openEvaluationModal('Ana Silva')">Ana Silva</a></td>
-                                <td>Excelente</td>
-                                <td>Muito Bom</td>
-                                <td><span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Avaliado</span></td>
-                            </tr>
-                            <tr class="border-b">
-                                <td class="py-3 font-medium"><a href="#" class="text-indigo-600 hover:underline" onclick="openEvaluationModal('Bruno Costa')">Bruno Costa</a></td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td><span class="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-100 rounded-full">Pendente</span></td>
-                            </tr>
-                            <tr class="border-b">
-                                <td class="py-3 font-medium"><a href="#" class="text-indigo-600 hover:underline" onclick="openEvaluationModal('Carla Dias')">Carla Dias</a></td>
-                                <td>Bom</td>
-                                <td>Regular</td>
-                                <td><span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Avaliado</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <h2 class="text-2xl font-bold mb-4" id="class-details-title">Detalhes da Turma</h2>
+            
+            <!-- Informações gerais da turma -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="bg-white p-4 rounded-xl shadow-md">
+                    <h3 class="text-sm font-medium text-gray-600 mb-2">Período</h3>
+                    <p class="text-lg font-semibold text-gray-900" id="class-details-period">Manhã</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-md">
+                    <h3 class="text-sm font-medium text-gray-600 mb-2">Total de Alunos</h3>
+                    <p class="text-lg font-semibold text-gray-900" id="class-details-student-count">8</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-md">
+                    <h3 class="text-sm font-medium text-gray-600 mb-2">Ano/Bimestre</h3>
+                    <p class="text-lg font-semibold text-gray-900" id="class-details-year-bimester">2025 - 1º</p>
+                </div>
+            </div>
+
+            <!-- Professores da turma -->
+            <div class="bg-white p-6 rounded-xl shadow-md mb-6">
+                <h3 class="text-lg font-semibold mb-4 border-b pb-2">Professores</h3>
+                <div id="class-details-teachers" class="space-y-3">
+                    <!-- Lista de professores será renderizada aqui -->
+                </div>
+            </div>
+
+            <!-- Atividades da turma -->
+            <div class="bg-white p-6 rounded-xl shadow-md mb-6">
+                <h3 class="text-lg font-semibold mb-4 border-b pb-2">Atividades da Turma</h3>
+                <p class="text-sm text-gray-500 mb-4">Clique em uma atividade abaixo para visualizar as avaliações dos alunos nessa atividade.</p>
+                <div class="flex gap-3 mb-4">
+                    <input type="text" id="activity-search-input" placeholder="Pesquisar atividade..." class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <select id="activity-status-filter" class="w-50 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                        <option value="">Todos os status</option>
+                        <option value="Realizada">Realizada</option>
+                        <option value="Programada">Programada</option>
+                    </select>
+                </div>
+                <div id="class-details-activities" class="space-y-2">
+                    <!-- Lista de atividades será renderizada aqui -->
+                </div>
+            </div>
+
+            <!-- Avaliação de atividade selecionada -->
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <h3 class="text-lg font-semibold mb-2">Avaliações: <span id="selected-activity-name" class="text-indigo-600">Selecione uma atividade</span></h3>
+                <p class="text-sm text-gray-500 mb-4">Clique no nome do aluno para editar a avaliação de execução.</p>
+                <div class="flex gap-3 mb-4">
+                    <input type="text" id="student-search-input" placeholder="Pesquisar aluno..." class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <select id="student-status-filter" class="w-50 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                        <option value="">Todos os status</option>
+                        <option value="Avaliado">Avaliado</option>
+                        <option value="Pendente">Pendente</option>
+                    </select>
+                </div>
+                <div id="evaluation-table-container">
+                    <div class="text-center py-8 text-gray-400">
+                        <p class="text-sm">👆 Selecione uma atividade acima para visualizar as avaliações</p>
+                    </div>
                 </div>
             </div>
         </main>
@@ -849,15 +873,108 @@
         ],
         // Lista de turmas para o professor
         allClasses: [
-            { id: 'c1', name: 'Turma A', period: 'Manhã', students: 8, headTeacher: 'Você', year: '2025', bimester: '1', studentList: ['Ana Silva (Leve)', 'Bruno Costa (Moderado)', 'Carla Dias (Leve)', 'Diana (Moderado)'] },
-            { id: 'c2', name: 'Turma B', period: 'Manhã', students: 7, headTeacher: 'Prof. João Silva', year: '2025', bimester: '1', studentList: ['Eduardo (Leve)', 'Fernanda (Leve)', 'Gustavo (Moderado)', 'Helena (Severo)'] },
-            { id: 'c3', name: 'Turma C', period: 'Tarde', students: 6, headTeacher: 'Prof. Maria Oliveira', year: '2025', bimester: '2', studentList: ['Felipe Souza (Moderado)', 'Gabriela Lima (Leve)', 'Henrique (Leve)', 'Iris (Moderado)'] },
-            { id: 'c4', name: 'Turma D', period: 'Tarde', students: 9, headTeacher: 'Prof. Carlos Mendes', year: '2025', bimester: '2', studentList: ['João (Leve)', 'Juliana (Moderado)', 'Kevin (Leve)', 'Laura (Severo)'] },
-            { id: 'c5', name: 'Turma E', period: 'Noite', students: 5, headTeacher: 'Prof. Ana Paula', year: '2024', bimester: '3', studentList: ['Mateus (Leve)', 'Mariana (Moderado)', 'Noel (Leve)'] },
-            { id: 'c6', name: 'Turma F', period: 'Noite', students: 8, headTeacher: 'Você', year: '2024', bimester: '3', studentList: ['Otávio (Moderado)', 'Patrícia (Leve)', 'Quentin (Leve)', 'Rita (Moderado)'] },
-            { id: 'c7', name: 'Turma G', period: 'Manhã', students: 7, headTeacher: 'Prof. Roberto Costa', year: '2023', bimester: '4', studentList: ['Samuel (Leve)', 'Sophia (Moderado)', 'Tiago (Leve)'] },
-            { id: 'c8', name: 'Turma H', period: 'Tarde', students: 6, headTeacher: 'Prof. Fernanda Lima', year: '2023', bimester: '4', studentList: ['Úrsula (Moderado)', 'Vitor (Leve)', 'Vanessa (Leve)'] },
-            { id: 'c9', name: 'Turma I', period: 'Noite', students: 8, headTeacher: 'Você', year: '2025', bimester: '1', studentList: ['Wagner (Leve)', 'Ximena (Moderado)', 'Yasmin (Leve)', 'Zoe (Moderado)'] }
+            { 
+                id: 'c1', name: 'Turma A', period: 'Manhã', students: 8, headTeacher: 'Você', year: '2025', bimester: '1', 
+                studentList: ['Ana Silva (Leve)', 'Bruno Costa (Moderado)', 'Carla Dias (Leve)', 'Diana (Moderado)'],
+                activities: [
+                    { id: 'a1', name: 'Pintura com Aquarela', date: '03/09/2025', status: 'Realizada' },
+                    { id: 'a2', name: 'Marcenaria: Porta-lápis', date: '10/09/2025', status: 'Realizada' },
+                    { id: 'a3', name: 'Teatro de Fantoches', date: '17/09/2025', status: 'Programada' }
+                ],
+                teachers: [
+                    { id: 'p1', name: 'Prof. Joana Silva', isHeadTeacher: true, specialization: 'Artes' },
+                    { id: 'p4', name: 'Prof. Ana Paula', isHeadTeacher: false, specialization: 'Culinária' }
+                ]
+            },
+            { 
+                id: 'c2', name: 'Turma B', period: 'Manhã', students: 7, headTeacher: 'Prof. João Silva', year: '2025', bimester: '1', 
+                studentList: ['Eduardo (Leve)', 'Fernanda (Leve)', 'Gustavo (Moderado)', 'Helena (Severo)'],
+                activities: [
+                    { id: 'a4', name: 'Educação Física: Jogos Cooperativos', date: '05/09/2025', status: 'Realizada' },
+                    { id: 'a5', name: 'Dança Livre', date: '12/09/2025', status: 'Realizada' }
+                ],
+                teachers: [
+                    { id: 'p2', name: 'Prof. Maria Oliveira', isHeadTeacher: false, specialization: 'Educação Física' },
+                    { id: 'p3', name: 'Prof. Carlos Mendes', isHeadTeacher: true, specialization: 'Música' }
+                ]
+            },
+            { 
+                id: 'c3', name: 'Turma C', period: 'Tarde', students: 6, headTeacher: 'Prof. Maria Oliveira', year: '2025', bimester: '2', 
+                studentList: ['Felipe Souza (Moderado)', 'Gabriela Lima (Leve)', 'Henrique (Leve)', 'Iris (Moderado)'],
+                activities: [
+                    { id: 'a6', name: 'Tecnologia: Robótica Básica', date: '08/09/2025', status: 'Programada' },
+                    { id: 'a7', name: 'Culinária: Biscoitos Decorados', date: '15/09/2025', status: 'Programada' }
+                ],
+                teachers: [
+                    { id: 'p5', name: 'Prof. Roberto Costa', isHeadTeacher: false, specialization: 'Tecnologia' },
+                    { id: 'p6', name: 'Prof. Fernanda Lima', isHeadTeacher: true, specialization: 'Artesanato' }
+                ]
+            },
+            { 
+                id: 'c4', name: 'Turma D', period: 'Tarde', students: 9, headTeacher: 'Prof. Carlos Mendes', year: '2025', bimester: '2', 
+                studentList: ['João (Leve)', 'Juliana (Moderado)', 'Kevin (Leve)', 'Laura (Severo)'],
+                activities: [
+                    { id: 'a8', name: 'Música: Instrumentos de Percussão', date: '07/09/2025', status: 'Realizada' },
+                    { id: 'a9', name: 'Artes Plásticas: Colagem Criativa', date: '14/09/2025', status: 'Realizada' }
+                ],
+                teachers: [
+                    { id: 'p1', name: 'Prof. Joana Silva', isHeadTeacher: false, specialization: 'Artes' },
+                    { id: 'p3', name: 'Prof. Carlos Mendes', isHeadTeacher: true, specialization: 'Música' }
+                ]
+            },
+            { 
+                id: 'c5', name: 'Turma E', period: 'Noite', students: 5, headTeacher: 'Prof. Ana Paula', year: '2024', bimester: '3', 
+                studentList: ['Mateus (Leve)', 'Mariana (Moderado)', 'Noel (Leve)'],
+                activities: [
+                    { id: 'a10', name: 'Culinária: Brigadeiro', date: '06/09/2024', status: 'Realizada' }
+                ],
+                teachers: [
+                    { id: 'p4', name: 'Prof. Ana Paula', isHeadTeacher: true, specialization: 'Culinária' }
+                ]
+            },
+            { 
+                id: 'c6', name: 'Turma F', period: 'Noite', students: 8, headTeacher: 'Você', year: '2024', bimester: '3', 
+                studentList: ['Otávio (Moderado)', 'Patrícia (Leve)', 'Quentin (Leve)', 'Rita (Moderado)'],
+                activities: [
+                    { id: 'a11', name: 'Artesanato: Bolsa de Pano', date: '09/09/2024', status: 'Realizada' },
+                    { id: 'a12', name: 'Pintura Abstrata', date: '16/09/2024', status: 'Realizada' }
+                ],
+                teachers: [
+                    { id: 'p6', name: 'Prof. Fernanda Lima', isHeadTeacher: false, specialization: 'Artesanato' },
+                    { id: 'p1', name: 'Prof. Joana Silva', isHeadTeacher: true, specialization: 'Artes' }
+                ]
+            },
+            { 
+                id: 'c7', name: 'Turma G', period: 'Manhã', students: 7, headTeacher: 'Prof. Roberto Costa', year: '2023', bimester: '4', 
+                studentList: ['Samuel (Leve)', 'Sophia (Moderado)', 'Tiago (Leve)'],
+                activities: [
+                    { id: 'a13', name: 'Programação Visual', date: '11/12/2023', status: 'Realizada' }
+                ],
+                teachers: [
+                    { id: 'p5', name: 'Prof. Roberto Costa', isHeadTeacher: true, specialization: 'Tecnologia' }
+                ]
+            },
+            { 
+                id: 'c8', name: 'Turma H', period: 'Tarde', students: 6, headTeacher: 'Prof. Fernanda Lima', year: '2023', bimester: '4', 
+                studentList: ['Úrsula (Moderado)', 'Vitor (Leve)', 'Vanessa (Leve)'],
+                activities: [
+                    { id: 'a14', name: 'Tecelagem em Tear', date: '13/12/2023', status: 'Realizada' }
+                ],
+                teachers: [
+                    { id: 'p6', name: 'Prof. Fernanda Lima', isHeadTeacher: true, specialization: 'Artesanato' }
+                ]
+            },
+            { 
+                id: 'c9', name: 'Turma I', period: 'Noite', students: 8, headTeacher: 'Você', year: '2025', bimester: '1', 
+                studentList: ['Wagner (Leve)', 'Ximena (Moderado)', 'Yasmin (Leve)', 'Zoe (Moderado)'],
+                activities: [
+                    { id: 'a15', name: 'Dança de Salão Básica', date: '04/09/2025', status: 'Programada' },
+                    { id: 'a16', name: 'Expressão Corporal', date: '11/09/2025', status: 'Programada' }
+                ],
+                teachers: [
+                    { id: 'p2', name: 'Prof. Maria Oliveira', isHeadTeacher: true, specialization: 'Educação Física' }
+                ]
+            }
         ]
     };
 
@@ -1331,6 +1448,10 @@
     let itemsPerPage = 6;
     let filteredClasses = [];
 
+    // --- Armazena a turma selecionada ---
+    let selectedClass = null;
+    let selectedActivityIndex = 0;
+
     function renderTeacherClasses() {
         const container = document.getElementById('teacher-classes-container');
         if (!container) return;
@@ -1371,7 +1492,7 @@
                     ${studentsPreview}
                     ${hasMore ? '<li>...</li>' : ''}
                 </ul>
-                <button class="w-full bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-md hover:bg-gray-300 transition" onclick="showView('teacher-class-details')">
+                <button class="w-full bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-md hover:bg-gray-300 transition" onclick="selectClass('${c.id}')">
                     Ver Detalhes da Turma
                 </button>
             `;
@@ -1485,9 +1606,191 @@
          closeAddActivityModal();
     }
 
+    // --- Funções para Página de Detalhes da Turma ---
+    function selectClass(classId) {
+        selectedClass = mockData.allClasses.find(c => c.id === classId);
+        if (selectedClass) {
+            selectedActivityIndex = 0;
+            renderClassDetails();
+            showView('teacher-class-details');
+        }
+    }
+
+    function renderClassDetails() {
+        if (!selectedClass) return;
+
+        // Atualizar título e informações gerais
+        document.getElementById('class-details-title').textContent = `Detalhes da ${selectedClass.name}`;
+        document.getElementById('class-details-period').textContent = selectedClass.period;
+        document.getElementById('class-details-student-count').textContent = selectedClass.students;
+        document.getElementById('class-details-year-bimester').textContent = `${selectedClass.year} - ${selectedClass.bimester}º`;
+
+        // Renderizar professores
+        renderClassTeachers();
+
+        // Renderizar atividades
+        renderClassActivitiesList();
+
+        // Renderizar primeira atividade
+        if (selectedClass.activities && selectedClass.activities.length > 0) {
+            renderActivityEvaluation(0);
+        }
+    }
+
+    function renderClassTeachers() {
+        const container = document.getElementById('class-details-teachers');
+        if (!container || !selectedClass) return;
+
+        container.innerHTML = '';
+        if (!selectedClass.teachers || selectedClass.teachers.length === 0) {
+            container.innerHTML = '<p class="text-sm text-gray-500">Nenhum professor atribuído.</p>';
+            return;
+        }
+
+        selectedClass.teachers.forEach(t => {
+            const teacherDiv = document.createElement('div');
+            teacherDiv.className = `flex items-center gap-3 p-3 bg-gray-50 rounded-lg border ${t.isHeadTeacher ? 'border-indigo-300 bg-indigo-50' : 'border-gray-200'}`;
+            teacherDiv.innerHTML = `
+                <div class="flex-1">
+                    <div class="font-semibold text-gray-800">${t.name}</div>
+                    <div class="text-sm text-gray-600">${t.specialization}</div>
+                </div>
+                ${t.isHeadTeacher ? '<span class="px-2 py-1 text-xs font-semibold text-indigo-700 bg-indigo-100 rounded-full">Professor Regente</span>' : ''}
+            `;
+            container.appendChild(teacherDiv);
+        });
+    }
+
+    function renderClassActivitiesList() {
+        const container = document.getElementById('class-details-activities');
+        if (!container || !selectedClass) return;
+
+        const searchInput = document.getElementById('activity-search-input');
+        const searchTerm = (searchInput?.value || '').trim().toLowerCase();
+
+        container.innerHTML = '';
+        if (!selectedClass.activities || selectedClass.activities.length === 0) {
+            container.innerHTML = '<p class="text-sm text-gray-500">Nenhuma atividade atribuída.</p>';
+            return;
+        }
+
+        const filteredActivities = selectedClass.activities.filter(activity =>
+            activity.name.toLowerCase().includes(searchTerm)
+        );
+
+        if (filteredActivities.length === 0) {
+            container.innerHTML = '<p class="text-sm text-gray-500">Nenhuma atividade encontrada com esse critério.</p>';
+            return;
+        }
+
+        filteredActivities.forEach((activity, originalIndex) => {
+            const realIndex = selectedClass.activities.indexOf(activity);
+            const activityDiv = document.createElement('div');
+            const isSelected = realIndex === selectedActivityIndex;
+            activityDiv.className = `p-4 rounded-lg cursor-pointer transition border-2 ${
+                isSelected 
+                    ? 'bg-indigo-50 border-indigo-500 shadow-md' 
+                    : 'bg-gray-50 border-gray-200 hover:bg-gray-100 hover:border-indigo-300'
+            }`;
+            activityDiv.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                        <div class="font-semibold text-gray-800">${activity.name}</div>
+                        <div class="text-sm text-gray-600 mt-1">${activity.date}</div>
+                    </div>
+                    <span class="px-3 py-1 text-xs font-semibold ${activity.status === 'Realizada' ? 'text-green-700 bg-green-100' : 'text-indigo-700 bg-indigo-100'} rounded-full">${activity.status}</span>
+                </div>
+            `;
+            activityDiv.addEventListener('click', () => {
+                selectedActivityIndex = realIndex;
+                renderClassActivitiesList();
+                renderActivityEvaluation(realIndex);
+            });
+            container.appendChild(activityDiv);
+        });
+    }
+
+    function renderActivityEvaluation(index) {
+        if (!selectedClass || !selectedClass.activities || !selectedClass.activities[index]) return;
+
+        const activity = selectedClass.activities[index];
+        document.getElementById('selected-activity-name').textContent = activity.name;
+
+        // Dados dos alunos
+        const allStudents = [
+            { name: 'Ana Silva', criteria1: 'Excelente', criteria2: 'Muito Bom', status: 'Avaliado' },
+            { name: 'Bruno Costa', criteria1: '—', criteria2: '—', status: 'Pendente' },
+            { name: 'Carla Dias', criteria1: 'Bom', criteria2: 'Regular', status: 'Avaliado' },
+            { name: 'Diana', criteria1: 'Muito Bom', criteria2: 'Muito Bom', status: 'Avaliado' },
+            { name: 'Eduardo', criteria1: '—', criteria2: '—', status: 'Pendente' },
+            { name: 'Fernanda', criteria1: 'Excelente', criteria2: 'Excelente', status: 'Avaliado' }
+        ];
+
+        // Aplicar filtro de busca
+        const searchInput = document.getElementById('student-search-input');
+        const searchTerm = (searchInput?.value || '').trim().toLowerCase();
+        const filteredStudents = allStudents.filter(student =>
+            student.name.toLowerCase().includes(searchTerm)
+        );
+
+        // Renderizar tabela de avaliações
+        const tableContainer = document.getElementById('evaluation-table-container');
+        
+        if (filteredStudents.length === 0) {
+            tableContainer.innerHTML = '<p class="text-sm text-gray-500">Nenhum aluno encontrado com esse critério.</p>';
+            return;
+        }
+
+        const studentRows = filteredStudents.map(student => `
+            <tr class="border-b hover:bg-gray-50">
+                <td class="py-3 font-medium"><a href="#" class="text-indigo-600 hover:underline" onclick="openEvaluationModal('${student.name}'); return false;">${student.name}</a></td>
+                <td>${student.criteria1}</td>
+                <td>${student.criteria2}</td>
+                <td><span class="px-2 py-1 text-xs font-semibold ${student.status === 'Avaliado' ? 'text-green-800 bg-green-100' : 'text-yellow-800 bg-yellow-100'} rounded-full">${student.status}</span></td>
+            </tr>
+        `).join('');
+
+        tableContainer.innerHTML = `
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="border-b">
+                            <th class="py-2 font-semibold">Aluno</th>
+                            <th class="py-2 font-semibold">Critério 1: Participação</th>
+                            <th class="py-2 font-semibold">Critério 2: Execução</th>
+                            <th class="py-2 font-semibold">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${studentRows}
+                    </tbody>
+                </table>
+            </div>
+        `;
+    }
 
     // --- Inicialização ---
     showView('login-view');
+
+    // Event listeners para filtros de busca
+    const activitySearchInput = document.getElementById('activity-search-input');
+    const studentSearchInput = document.getElementById('student-search-input');
+
+    if (activitySearchInput) {
+        activitySearchInput.addEventListener('input', function() {
+            if (selectedClass) {
+                renderClassActivitiesList();
+            }
+        });
+    }
+
+    if (studentSearchInput) {
+        studentSearchInput.addEventListener('input', function() {
+            if (selectedClass && selectedActivityIndex !== null) {
+                renderActivityEvaluation(selectedActivityIndex);
+            }
+        });
+    }
 </script>
 
 </body>
