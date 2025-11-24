@@ -795,6 +795,14 @@
                     </div>
                     <p class="text-xs text-gray-500 mt-1">Marque as caixas ao lado dos nomes para selecionar múltiplos alunos.</p>
                 </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Professores</label>
+                    <input id="create-class-teacher-search" type="text" placeholder="Pesquisar professores por nome" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md" />
+                    <div id="create-class-teachers-list" class="mt-2 max-h-40 overflow-y-auto border border-gray-200 rounded-md p-2 bg-white space-y-2">
+                        <!-- Lista de professores com checkboxes e radio button será renderizada aqui via JS -->
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">Marque os professores e selecione quem será o professor regente.</p>
+                </div>
             </div>
             <div class="mt-6 flex justify-end gap-3">
                 <button class="bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-md hover:bg-gray-300" onclick="closeCreateClassModal()">Cancelar</button>
@@ -830,6 +838,15 @@
             { id: 's4', name: 'Felipe Souza', dob: '2009-08-14', email: 'felipe.souza@exemplo.com' },
             { id: 's5', name: 'Gabriela Lima', dob: '2008-12-01', email: 'gabriela.lima@exemplo.com' },
             { id: 's6', name: 'Carlos Andrade', dob: '2009-04-15', email: 'carlos.andrade@exemplo.com' }
+        ],
+        // Lista de professores disponíveis para criação de turmas
+        availableTeachers: [
+            { id: 'p1', name: 'Prof. Joana Silva', email: 'joana.silva@escola.com', specialization: 'Artes' },
+            { id: 'p2', name: 'Prof. Maria Oliveira', email: 'maria.oliveira@escola.com', specialization: 'Educação Física' },
+            { id: 'p3', name: 'Prof. Carlos Mendes', email: 'carlos.mendes@escola.com', specialization: 'Música' },
+            { id: 'p4', name: 'Prof. Ana Paula', email: 'ana.paula@escola.com', specialization: 'Culinária' },
+            { id: 'p5', name: 'Prof. Roberto Costa', email: 'roberto.costa@escola.com', specialization: 'Tecnologia' },
+            { id: 'p6', name: 'Prof. Fernanda Lima', email: 'fernanda.lima@escola.com', specialization: 'Artesanato' }
         ]
     };
 
@@ -1176,10 +1193,11 @@
     if (createClassBtn) {
         createClassBtn.addEventListener('click', () => {
             if (createClassModal) createClassModal.classList.remove('hidden');
-            // populate students list when opening
+            // populate students and teachers lists when opening
             populateCreateClassStudents('');
-            const search = document.getElementById('create-class-student-search');
-            if (search) { search.value = ''; search.focus(); }
+            populateCreateClassTeachers('');
+            const studentSearch = document.getElementById('create-class-student-search');
+            if (studentSearch) { studentSearch.value = ''; studentSearch.focus(); }
         });
     }
 
@@ -1189,13 +1207,37 @@
     }
 
     function saveCreateClass() {
-        // Frontend-only: read selected students, show simulated confirmation and close
+        // Frontend-only: read selected students and teachers, show simulated confirmation and close
         const name = document.getElementById('new-class-name')?.value || 'Nova Turma';
-        const selected = Array.from(document.querySelectorAll('#create-class-students-list input[type="checkbox"]:checked'))
+        
+        // Alunos selecionados
+        const selectedStudents = Array.from(document.querySelectorAll('#create-class-students-list input[type="checkbox"]:checked'))
             .map(cb => ({ id: cb.value, name: cb.dataset.name }));
-        const names = selected.map(s => s.name).join(', ');
-        const count = selected.length;
-        alert(`Turma "${name}" criada (simulado). Alunos selecionados (${count}): ${names}`);
+        const studentNames = selectedStudents.map(s => s.name).join(', ');
+        const studentCount = selectedStudents.length;
+        
+        // Professores selecionados
+        const selectedTeachers = Array.from(document.querySelectorAll('#create-class-teachers-list input[type="checkbox"]:checked'))
+            .map(cb => ({ id: cb.value, name: cb.dataset.name }));
+        
+        // Professor regente
+        const headTeacherId = document.querySelector('input[name="teacher-regent"]:checked')?.value;
+        const headTeacher = selectedTeachers.find(t => t.id === headTeacherId);
+        
+        if (selectedTeachers.length === 0) {
+            alert('Por favor, selecione pelo menos um professor.');
+            return;
+        }
+        
+        if (!headTeacherId) {
+            alert('Por favor, selecione um professor regente.');
+            return;
+        }
+        
+        const teacherNames = selectedTeachers.map(t => t.name).join(', ');
+        const teacherCount = selectedTeachers.length;
+        
+        alert(`Turma "${name}" criada (simulado).\n\nAlunos selecionados (${studentCount}): ${studentNames}\n\nProfessores (${teacherCount}): ${teacherNames}\n\nProfessor Regente: ${headTeacher.name}`);
         closeCreateClassModal();
     }
 
@@ -1228,6 +1270,44 @@
     if (createClassStudentSearch) {
         createClassStudentSearch.addEventListener('input', (e) => {
             populateCreateClassStudents(e.target.value);
+        });
+    }
+
+    // Popula a lista de professores com checkboxes e radio buttons para selecionar o regente
+    function populateCreateClassTeachers(filter) {
+        const container = document.getElementById('create-class-teachers-list');
+        if (!container) return;
+        const f = (filter || '').trim().toLowerCase();
+        container.innerHTML = '';
+        const teachers = mockData.availableTeachers || [];
+        const filtered = teachers.filter(t => t.name.toLowerCase().includes(f));
+        if (filtered.length === 0) {
+            container.innerHTML = '<div class="text-sm text-gray-500">Nenhum professor encontrado.</div>';
+            return;
+        }
+        filtered.forEach(t => {
+            const checkboxId = `create-class-teacher-checkbox-${t.id}`;
+            const radioId = `create-class-teacher-regent-${t.id}`;
+            const wrapper = document.createElement('div');
+            wrapper.className = 'flex items-center gap-3 py-2 px-2 border-b border-gray-100 last:border-b-0';
+            wrapper.innerHTML = `
+                <input type="checkbox" id="${checkboxId}" value="${t.id}" data-name="${t.name}" class="create-class-teacher-checkbox w-4 h-4 text-indigo-600 border-gray-300 rounded" />
+                <label for="${checkboxId}" class="flex-1 text-sm cursor-pointer">
+                    <div class="font-medium text-gray-800">${t.name}</div>
+                    <div class="text-xs text-gray-500">${t.specialization}</div>
+                </label>
+                <input type="radio" id="${radioId}" name="teacher-regent" value="${t.id}" class="w-4 h-4 text-green-600 border-gray-300" />
+                <label for="${radioId}" class="text-xs text-gray-600 font-medium cursor-pointer">Regente</label>
+            `;
+            container.appendChild(wrapper);
+        });
+    }
+
+    // Escuta o campo de busca de professores dentro do modal
+    const createClassTeacherSearch = document.getElementById('create-class-teacher-search');
+    if (createClassTeacherSearch) {
+        createClassTeacherSearch.addEventListener('input', (e) => {
+            populateCreateClassTeachers(e.target.value);
         });
     }
 
