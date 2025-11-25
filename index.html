@@ -569,153 +569,163 @@
         
         <!-- DASHBOARD DO PEDAGOGO -->
         <main id="pedagogue-dashboard" class="hidden">
-            <h2 class="text-2xl font-bold mb-6">Consulta de Desempenho</h2>
-            <div class="bg-white p-6 rounded-xl shadow-md">
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 items-end">
-                    <div>
-                        <label for="ped-student-name" class="block text-sm font-medium text-gray-700">Aluno</label>
-                        <input type="text" id="ped-student-name" placeholder="Nome do aluno" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md">
-                    </div>
-                     <div>
-                        <label for="ped-class" class="block text-sm font-medium text-gray-700">Turma</label>
-                        <select id="ped-class" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md">
-                            <option>Todas</option>
-                            <option>Turma A</option>
-                            <option>Turma B</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="ped-period" class="block text-sm font-medium text-gray-700">Período</label>
-                        <select id="ped-period" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md">
-                            <option>Última Semana</option>
-                            <option>Este Mês</option>
-                            <option>Último Bimestre</option>
-                            <option>Este Ano</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="ped-disability" class="block text-sm font-medium text-gray-700">Grau</label>
-                        <select id="ped-disability" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md">
-                            <option>Todos</option>
-                            <option>Leve</option>
-                            <option>Moderado</option>
-                        </select>
-                    </div>
-                    <button id="search-performance-btn" class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-md hover:bg-indigo-700">
-                        Consultar
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">Painel do Pedagogo</h2>
+                
+                <div id="pedagogue-tabs-nav" class="mt-4 md:mt-0 flex gap-3">
+                    <button onclick="switchPedagogueTab('classes')" id="tab-btn-classes" class="flex-1 min-w-0 bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 shadow-sm">
+                        Turmas
+                    </button>
+                    <button onclick="switchPedagogueTab('students')" id="tab-btn-students" class="flex-1 min-w-0 bg-white border border-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-200 shadow-sm">
+                        Alunos
                     </button>
                 </div>
             </div>
 
-            <div id="performance-results" class="mt-6 hidden">
-                <h3 class="text-xl font-bold mb-4">Resultados para "Ana Silva"</h3>
-                 <div class="bg-white p-6 rounded-xl shadow-md">
-                    <p class="text-gray-600 mb-4">
-                        <strong>Período:</strong> Este Mês<br>
-                        <strong>Total de Atividades:</strong> 12<br>
-                        <strong>Desempenho Geral:</strong> Muito Bom
-                    </p>
-                    <button id="generate-report-btn" class="bg-green-600 text-white font-bold py-2 px-4 rounded-md hover:bg-green-700 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
-                        <span id="generate-report-text">Gerar Relatório Textual</span>
-                        <div id="generate-report-spinner" class="lds-dual-ring hidden"></div>
-                    </button>
-                    <!-- Relatórios em lista (UI-only) para pedagogo: filtros + listagem + paginação -->
-                    <div class="border-t mt-4 pt-4">
-                        <form class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end mb-4">
-                            <div>
-                                <label for="teacher-report-search" class="block text-sm font-medium text-gray-700 mb-1">Buscar relatórios</label>
-                                <input id="teacher-report-search" type="text" placeholder="Ex: Novembro 2025" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Período</label>
-                                <div class="flex items-center gap-2">
-                                    <input id="teacher-date" type="date" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                                </div>
-                            </div>
-                            <div>
-                                <label for="teacher-report-type-filter" class="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
-                                <select id="teacher-report-type-filter" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                    <option value="">Todos</option>
-                                    <option value="monthly">Mensal</option>
-                                    <option value="weekly">Semanal</option>
-                                </select>
-                            </div>
-                            <div class="col-span-1 flex gap-3 w-full min-w-0">
-                                <button type="button" class="flex-1 min-w-0 bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Aplicar</button>
-                                <button type="reset" class="flex-1 min-w-0 bg-white border border-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-200">Limpar</button>
-                            </div>
-                        </form>
-
-                        <div class="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                            <div class="flex items-center gap-3">
-                                <label for="teacher-reports-per-page" class="text-sm font-medium text-gray-700">Exibir</label>
-                                <select id="teacher-reports-per-page" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white">
-                                    <option value="5">5</option>
-                                    <option value="10" selected>10</option>
-                                    <option value="20">20</option>
-                                    <option value="all">Todas</option>
-                                </select>
-                                <span class="text-sm text-gray-500">por página</span>
-                            </div>
-                            <div class="text-sm text-gray-600">Total: <strong class="text-gray-800">3</strong> relatórios</div>
+            <div id="pedagogue-view-classes" class="pedagogue-tab-content">
+                <div class="bg-white p-4 rounded-xl shadow-md mb-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end mb-4">
+                        <div class="sm:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nome da Turma</label>
+                            <input type="text" placeholder="Ex: Turma A" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white" >
                         </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Período</label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                                <option>Todos</option>
+                                <option>Manhã</option>
+                                <option>Tarde</option>
+                            </select>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="flex-1 bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md">Aplicar</button>
+                            <button class="flex-1 bg-white border border-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md hover:bg-gray-50">Limpar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-t pt-3">
+                        <div class="flex items-center gap-3">
+                            <label class="text-sm font-medium text-gray-700">Exibir</label>
+                            <select id="ped-classes-per-page" onchange="changePedClassPageSize()" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm bg-white focus:outline-none focus:ring-indigo-500">
+                                <option value="3">3</option>
+                                <option value="6" selected>6</option>
+                                <option value="9">9</option>
+                            </select>
+                            <span class="text-sm text-gray-500">por página</span>
+                        </div>
+                        <div class="text-sm text-gray-600">Total: <strong class="text-gray-800" id="ped-total-classes">0</strong> turmas</div>
+                    </div>
+                </div>
+                
+                <div id="pedagogue-classes-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                    </div>
+            </div>
 
-                        <ul id="teacher-reports-list" class="space-y-3">
-                            <li class="p-3 bg-gray-50 rounded-lg">
-                                <div class="flex items-start justify-between">
-                                    <div>
-                                        <strong>Relatório Mensal - Novembro/2025</strong>
-                                        <div class="text-sm text-gray-600">01/11/2025 — Mensal</div>
-                                        <div class="text-sm text-gray-600 mt-1">Resumo: Perfil agregado da turma com observações por aluno.</div>
-                                    </div>
-                                    <div class="ml-4 flex flex-col items-end">
-                                        <span class="px-2 py-1 text-xs font-semibold text-indigo-700 bg-indigo-50 border border-indigo-100 rounded-full shadow-sm">Mensal</span>
-                                    </div>
-                                </div>
-                            </li>
+            <div id="pedagogue-view-students" class="pedagogue-tab-content hidden">
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">Diretório de Alunos</h3>
+                    <p class="text-sm text-gray-500 mb-4">Clique no nome do aluno para visualizar o desempenho detalhado e gerar relatórios.</p>
+                    
+                    <div class="flex gap-3 mb-4">
+                        <input type="text" id="ped-student-search-global" placeholder="Pesquisar por nome, matrícula ou grau..." class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <button type="button" class="bg-white border border-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition">Limpar</button>
+                    </div>
 
-                            <li class="p-3 bg-gray-50 rounded-lg">
-                                <div class="flex items-start justify-between">
-                                    <div>
-                                        <strong>Relatório Semanal - Semana 2 de Novembro/2025</strong>
-                                        <div class="text-sm text-gray-600">08/11/2025 — Semanal</div>
-                                        <div class="text-sm text-gray-600 mt-1">Resumo: Observações por turma e recomendações pedagógicas.</div>
-                                    </div>
-                                    <div class="ml-4 flex flex-col items-end">
-                                        <span class="px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-50 border border-yellow-100 rounded-full shadow-sm">Semanal</span>
-                                    </div>
-                                </div>
-                            </li>
-
-                            <li class="p-3 bg-gray-50 rounded-lg">
-                                <div class="flex items-start justify-between">
-                                    <div>
-                                        <strong>Relatório Mensal - Outubro/2025</strong>
-                                        <div class="text-sm text-gray-600">01/10/2025 — Mensal</div>
-                                        <div class="text-sm text-gray-600 mt-1">Resumo: Tendências de participação e sugestões para intervenções.</div>
-                                    </div>
-                                    <div class="ml-4 flex flex-col items-end">
-                                        <span class="px-2 py-1 text-xs font-semibold text-indigo-700 bg-indigo-50 border border-indigo-100 rounded-full shadow-sm">Mensal</span>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-
-                        <!-- Paginação (UI apenas) -->
-                        <div class="mt-4 flex items-center justify-center">
-                            <nav class="inline-flex rounded-md shadow-sm" aria-label="Pagination">
-                                <button class="px-3 py-1.5 rounded-l-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 text-sm">Anterior</button>
-                                <button class="px-3 py-1.5 border-t border-b border-gray-300 bg-indigo-600 text-white text-sm ring-2 ring-indigo-200">1</button>
-                                <button class="px-3 py-1.5 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50 text-sm">2</button>
-                                <button class="px-3 py-1.5 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50 text-sm">3</button>
-                                <button class="px-3 py-1.5 rounded-r-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 text-sm">Próximo</button>
-                            </nav>
+                    <div id="pedagogue-students-table-container" class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-gray-200">
+                                    <th class="py-3 px-2 font-semibold text-gray-700 text-sm">Aluno</th>
+                                    <th class="py-3 px-2 font-semibold text-gray-700 text-sm">Grau de Deficiência</th>
+                                    <th class="py-3 px-2 font-semibold text-gray-700 text-sm">Turma</th>
+                                    <th class="py-3 px-2 font-semibold text-gray-700 text-sm text-right">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pedagogue-students-tbody" class="text-sm text-gray-600">
+                                </tbody>
+                        </table>
+                        <div id="ped-no-students-msg" class="text-center py-8 text-gray-500 hidden">
+                            Nenhum aluno encontrado.
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div id="pedagogue-student-detail-view" class="hidden animate-fade-in">
+                <button onclick="closeStudentPerformance()" class="mb-4 text-indigo-600 font-semibold flex items-center gap-1 hover:underline">
+                    &larr; Voltar para Lista de Alunos
+                </button>
+
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                    <div class="flex flex-col md:flex-row justify-between items-start mb-6 border-b pb-6">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900" id="detail-student-name">Nome do Aluno</h3>
+                            <div class="flex gap-4 mt-2 text-sm text-gray-600">
+                                <span>Turma: <strong id="detail-student-class">Turma A</strong></span>
+                                <span>Turno: <strong id="detail-student-period">Manhã</strong></span>
+                            </div>
+                        </div>
+                        <div class="mt-4 md:mt-0">
+                            <span id="detail-student-disability" class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm font-semibold border border-indigo-200">
+                                Grau
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <h4 class="text-lg font-semibold text-gray-800 mb-4">Visão Geral de Desempenho</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <span class="text-xs text-gray-500 uppercase font-bold">Atividades Realizadas</span>
+                            <div class="text-3xl font-bold text-indigo-600 mt-1">12</div>
+                            <div class="text-xs text-gray-400 mt-1">Neste bimestre</div>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <span class="text-xs text-gray-500 uppercase font-bold">Conceito Médio</span>
+                            <div class="text-3xl font-bold text-green-600 mt-1">Muito Bom</div>
+                            <div class="text-xs text-gray-400 mt-1">Baseado em 4 avaliações</div>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <span class="text-xs text-gray-500 uppercase font-bold">Participação</span>
+                            <div class="text-3xl font-bold text-blue-600 mt-1">90%</div>
+                            <div class="text-xs text-gray-400 mt-1">Presença nas aulas</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-indigo-50 p-6 rounded-xl border border-indigo-100">
+                        <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+                            <div>
+                                <h4 class="text-lg font-bold text-gray-900">Relatório Assistido por IA</h4>
+                                <p class="text-sm text-gray-600">Gere um parecer descritivo baseado nas atividades recentes deste aluno.</p>
+                            </div>
+                            <button id="generate-report-btn" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded-md hover:bg-indigo-700 transition duration-150 ease-in-out flex items-center gap-2 shadow-sm whitespace-nowrap">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                                <span id="generate-report-text">Gerar Relatório</span>
+                                <div id="generate-report-spinner" class="lds-dual-ring hidden"></div>
+                            </button>
+                        </div>
+
+                        <div id="generated-report-container" class="hidden bg-white p-5 rounded-lg border border-gray-200 shadow-inner">
+                            <div class="flex justify-between items-center mb-2">
+                                <h5 class="font-bold text-gray-800 text-sm uppercase">Prévia do Relatório:</h5>
+                                <button class="text-xs text-indigo-600 hover:underline">Copiar Texto</button>
+                            </div>
+                            <p id="generated-report-text-content" class="text-sm text-gray-700 whitespace-pre-line leading-relaxed font-serif"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 flex items-center justify-center">
+                <nav class="inline-flex rounded-md shadow-sm" aria-label="Pagination">
+                    <button class="px-3 py-1.5 rounded-l-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 text-sm">Anterior</button>
+                    <button class="px-3 py-1.5 border-t border-b border-gray-300 bg-indigo-600 text-white text-sm ring-2 ring-indigo-200">1</button>
+                    <button class="px-3 py-1.5 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50 text-sm">2</button>
+                    <button class="px-3 py-1.5 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50 text-sm">3</button>
+                    <button class="px-3 py-1.5 rounded-r-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 text-sm">Próximo</button>
+                </nav>
             </div>
         </main>
+
     </div>
 
     <!-- MODAL DE DETALHES DA ATIVIDADE (ALUNO) -->
@@ -847,14 +857,6 @@
                     </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Alunos</label>
-                    <input id="create-class-student-search" type="text" placeholder="Pesquisar alunos por nome" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md" />
-                    <div id="create-class-students-list" class="mt-2 max-h-40 overflow-y-auto border border-gray-200 rounded-md p-2 bg-white">
-                        <!-- Lista de alunos com checkboxes será renderizada aqui via JS -->
-                    </div>
-                    <p class="text-xs text-gray-500 mt-1">Marque as caixas ao lado dos nomes para selecionar múltiplos alunos.</p>
-                </div>
-                <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Professores</label>
                     <input id="create-class-teacher-search" type="text" placeholder="Pesquisar professores por nome" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md" />
                     <div id="create-class-teachers-list" class="mt-2 max-h-40 overflow-y-auto border border-gray-200 rounded-md p-2 bg-white space-y-2">
@@ -924,7 +926,7 @@
             },
             { 
                 id: 'c2', name: 'Turma B', period: 'Manhã', students: 7, headTeacher: 'Prof. João Silva', year: '2025', bimester: '1', 
-                studentList: ['Eduardo (Leve)', 'Fernanda (Leve)', 'Gustavo (Moderado)', 'Helena (Severo)'],
+                studentList: ['Eduardo (Leve)', 'Fernanda (Leve)', 'Gustavo (Moderado)', 'Helena (Leve)'],
                 activities: [
                     { id: 'a4', name: 'Educação Física: Jogos Cooperativos', date: '05/09/2025', status: 'Realizada' },
                     { id: 'a5', name: 'Dança Livre', date: '12/09/2025', status: 'Realizada' }
@@ -1060,9 +1062,11 @@
         } else if (role === 'teacher') {
             welcomeMessage.textContent = `Olá, ${mockData.teacher.name}!`;
             showView('teacher-dashboard');
+            renderTeacherClasses();
         } else if (role === 'pedagogue') {
              welcomeMessage.textContent = `Olá, ${mockData.pedagogue.name}!`;
             showView('pedagogue-dashboard');
+            switchPedagogueTab('classes');
         }
     });
 
@@ -1511,14 +1515,17 @@
     const clearClassFiltersBtn = document.getElementById('clear-class-filters');
 
     // --- Lógica de Paginação do Dashboard do Professor ---
+    
+    // 1. DECLARAÇÃO DAS VARIÁVEIS GLOBAIS (IMPORTANTE: Devem estar aqui)
     let currentClassPage = 1;
     let itemsPerPage = 6;
-    let filteredClasses = [];
+    let filteredClasses = []; // <--- Esta é a variável que estava dando erro
 
     // --- Armazena a turma selecionada ---
     let selectedClass = null;
     let selectedActivityIndex = 0;
 
+    // 2. FUNÇÃO DE RENDERIZAÇÃO
     function renderTeacherClasses() {
         const container = document.getElementById('teacher-classes-container');
         if (!container) return;
@@ -1527,8 +1534,11 @@
         const year = (document.getElementById('filter-class-year').value || '').trim();
         const bimester = (document.getElementById('filter-class-bimester').value || '').trim();
 
-        // Filtrar turmas
-        filteredClasses = mockData.allClasses.filter(c => {
+        // Filtrar turmas usando o mockData
+        // Se mockData.allClasses não existir, usa array vazio para não quebrar
+        const sourceData = mockData.allClasses || [];
+
+        filteredClasses = sourceData.filter(c => {
             let visible = true;
             if (name && !c.name.toLowerCase().includes(name)) visible = false;
             if (year && c.year !== year) visible = false;
@@ -1537,7 +1547,8 @@
         });
 
         // Atualizar total
-        document.getElementById('total-classes').textContent = filteredClasses.length;
+        const totalEl = document.getElementById('total-classes');
+        if (totalEl) totalEl.textContent = filteredClasses.length;
 
         // Calcular paginação
         const totalPages = Math.ceil(filteredClasses.length / itemsPerPage);
@@ -1547,24 +1558,33 @@
 
         // Renderizar cards
         container.innerHTML = '';
-        classesPage.forEach(c => {
-            const studentsPreview = c.studentList.slice(0, 3).join('<br>');
-            const hasMore = c.studentList.length > 3;
-            const classCard = document.createElement('div');
-            classCard.className = 'bg-white p-6 rounded-xl shadow-md';
-            classCard.innerHTML = `
-                <h3 class="text-lg font-semibold border-b pb-2 mb-3">${c.name} - ${c.period} (${c.students} alunos)</h3>
-                <p class="text-sm text-gray-500 mb-4">Prof. Regente: ${c.headTeacher}</p>
-                <ul class="space-y-2 text-sm mb-4">
-                    ${studentsPreview}
-                    ${hasMore ? '<li>...</li>' : ''}
-                </ul>
-                <button class="w-full bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-md hover:bg-gray-300 transition" onclick="selectClass('${c.id}')">
-                    Ver Detalhes da Turma
-                </button>
-            `;
-            container.appendChild(classCard);
-        });
+        
+        if (classesPage.length === 0) {
+            container.innerHTML = '<div class="col-span-3 text-center py-8 text-gray-500">Nenhuma turma encontrada.</div>';
+        } else {
+            classesPage.forEach(c => {
+                const studentsPreview = c.studentList.slice(0, 3).join('<br>');
+                const hasMore = c.studentList.length > 3;
+                const classCard = document.createElement('div');
+                classCard.className = 'bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition';
+                classCard.innerHTML = `
+                    <h3 class="text-lg font-semibold border-b pb-2 mb-3 flex justify-between">
+                        ${c.name} 
+                        <span class="text-xs bg-gray-100 px-2 py-1 rounded-full font-normal self-center">${c.period}</span>
+                    </h3>
+                    <p class="text-sm text-gray-500 mb-4">Prof. Regente: <strong class="text-gray-700">${c.headTeacher}</strong></p>
+                    <div class="bg-gray-50 p-3 rounded mb-4 text-sm text-gray-600">
+                        <p class="text-xs font-bold text-gray-400 uppercase mb-1">Alunos (${c.students})</p>
+                        ${studentsPreview}
+                        ${hasMore ? '<div class="text-gray-400 italic mt-1">...e mais '+(c.students-3)+'</div>' : ''}
+                    </div>
+                    <button class="w-full bg-white border border-gray-300 text-gray-800 font-bold py-2 px-4 rounded-md hover:bg-gray-50 transition" onclick="selectClass('${c.id}')">
+                        Ver Detalhes da Turma
+                    </button>
+                `;
+                container.appendChild(classCard);
+            });
+        }
 
         // Renderizar paginação
         updateClassesPagination(totalPages);
@@ -1857,6 +1877,193 @@
                 renderActivityEvaluation(selectedActivityIndex);
             }
         });
+    }
+
+   // --- LÓGICA DO DASHBOARD DO PEDAGOGO ---
+
+    // 1. Controle de Abas
+    function switchPedagogueTab(tabName) {
+        // Garante que a view de detalhes esteja fechada ao trocar de aba
+        document.getElementById('pedagogue-student-detail-view').classList.add('hidden');
+        document.getElementById('pedagogue-tabs-nav').classList.remove('hidden');
+
+        // Ocultar todos os conteúdos
+        document.querySelectorAll('.pedagogue-tab-content').forEach(el => el.classList.add('hidden'));
+        
+        // Resetar botões
+        const btns = ['classes', 'students'];
+        btns.forEach(btn => {
+            const el = document.getElementById(`tab-btn-${btn}`);
+            if(el) el.className = "flex-1 min-w-0 bg-white border border-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-200 shadow-sm";
+        });
+
+        // Ativar conteúdo e botão
+        const targetView = document.getElementById(`pedagogue-view-${tabName}`);
+        if(targetView) targetView.classList.remove('hidden');
+        
+        const activeBtn = document.getElementById(`tab-btn-${tabName}`);
+        if(activeBtn) activeBtn.className = "flex-1 min-w-0 bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 shadow-sm";
+
+        // Carregar dados
+        if (tabName === 'classes') renderPedagogueClasses();
+        if (tabName === 'students') renderPedagogueStudents();
+    }
+
+    // 2. Renderizar Turmas
+    function renderPedagogueClasses() {
+        const container = document.getElementById('pedagogue-classes-container');
+        const totalEl = document.getElementById('ped-total-classes');
+        
+        const classes = mockData.allClasses || [];
+        totalEl.textContent = classes.length;
+        container.innerHTML = '';
+
+        classes.forEach(c => {
+            const studentsPreview = c.studentList.slice(0, 3).join('<br>');
+            const hasMore = c.studentList.length > 3;
+
+            const card = document.createElement('div');
+            card.className = "bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition duration-200 border border-gray-100";
+            
+            card.innerHTML = `
+                <h3 class="text-lg font-semibold border-b pb-2 mb-3 text-gray-900 flex justify-between">
+                    ${c.name} 
+                    <span class="text-xs font-normal px-2 py-1 bg-gray-100 rounded-full text-gray-600 self-center">${c.period}</span>
+                </h3>
+                <p class="text-sm text-gray-500 mb-4">Prof. Regente: <span class="font-medium text-gray-700">${c.headTeacher}</span></p>
+                <div class="bg-gray-50 p-3 rounded-md mb-4">
+                    <p class="text-xs font-bold text-gray-400 uppercase mb-1">Alunos (${c.students})</p>
+                    <div class="text-sm text-gray-600 leading-relaxed">
+                         ${studentsPreview}
+                         ${hasMore ? '<span class="text-gray-400 italic">...e mais '+(c.students-3)+'</span>' : ''}
+                    </div>
+                </div>
+                <button class="w-full bg-white border border-gray-300 text-gray-800 font-bold py-2 px-4 rounded-md hover:bg-gray-50 transition duration-150 ease-in-out">
+                    Ver Detalhes da Turma
+                </button>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    // 3. Renderizar Lista de Alunos
+    function renderPedagogueStudents() {
+        const tbody = document.getElementById('pedagogue-students-tbody');
+        const searchInput = document.getElementById('ped-student-search-global');
+        const noMsg = document.getElementById('ped-no-students-msg');
+        const term = (searchInput.value || '').toLowerCase();
+        
+        tbody.innerHTML = '';
+
+        // Flatten data
+        let allStudentsExpanded = [];
+        if (mockData.allClasses) {
+            mockData.allClasses.forEach(cls => {
+                cls.studentList.forEach(stString => {
+                    const parts = stString.match(/(.*)\s\((.*)\)/);
+                    if (parts) {
+                        allStudentsExpanded.push({
+                            name: parts[1],
+                            disability: parts[2],
+                            className: cls.name,
+                            period: cls.period
+                        });
+                    } else {
+                        allStudentsExpanded.push({
+                            name: stString,
+                            disability: 'Não informado',
+                            className: cls.name,
+                            period: cls.period
+                        });
+                    }
+                });
+            });
+        }
+
+        const filtered = allStudentsExpanded.filter(s => 
+            s.name.toLowerCase().includes(term) || 
+            s.disability.toLowerCase().includes(term) ||
+            s.className.toLowerCase().includes(term)
+        );
+
+        if(filtered.length === 0) {
+            noMsg.classList.remove('hidden');
+        } else {
+            noMsg.classList.add('hidden');
+            filtered.forEach((s, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-gray-100 hover:bg-gray-50 transition duration-150 cursor-pointer group";
+                
+                // Configura o evento de clique na linha inteira
+                // Convertemos o objeto 's' para string para passar no onclick, ou usamos closure
+                tr.onclick = function() { openStudentPerformance(s); };
+
+                let badgeClass = 'text-gray-700 bg-gray-100 border-gray-200';
+                if(s.disability.toLowerCase().includes('leve')) badgeClass = 'text-green-700 bg-green-50 border-green-100';
+                if(s.disability.toLowerCase().includes('moderado')) badgeClass = 'text-yellow-700 bg-yellow-50 border-yellow-100';
+
+                tr.innerHTML = `
+                    <td class="py-3 px-2 font-medium text-gray-900">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-bold group-hover:bg-indigo-200 transition">
+                                ${s.name.charAt(0)}
+                            </div>
+                            <span class="group-hover:text-indigo-700 transition">${s.name}</span>
+                        </div>
+                    </td>
+                    <td class="py-3 px-2">
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full border ${badgeClass}">
+                            ${s.disability}
+                        </span>
+                    </td>
+                    <td class="py-3 px-2">
+                        <span class="text-gray-900 font-medium">${s.className}</span> 
+                        <span class="text-xs text-gray-400 ml-1">(${s.period})</span>
+                    </td>
+                    <td class="py-3 px-2 text-right">
+                        <button class="text-indigo-600 hover:text-indigo-800 font-medium text-sm hover:underline">
+                            Ver Desempenho &rarr;
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    }
+
+    // 4. Lógica da View de Detalhes (Performance)
+    function openStudentPerformance(student) {
+        // Esconde as abas e a navegação
+        document.getElementById('pedagogue-tabs-nav').classList.add('hidden');
+        document.getElementById('pedagogue-view-students').classList.add('hidden');
+        
+        // Preenche os dados
+        document.getElementById('detail-student-name').textContent = student.name;
+        document.getElementById('detail-student-class').textContent = student.className;
+        document.getElementById('detail-student-period').textContent = student.period;
+        document.getElementById('detail-student-disability').textContent = student.disability;
+        
+        // Limpa o relatório anterior
+        document.getElementById('generated-report-container').classList.add('hidden');
+        document.getElementById('generated-report-text-content').textContent = '';
+
+        // Mostra a view de detalhes
+        document.getElementById('pedagogue-student-detail-view').classList.remove('hidden');
+    }
+
+    function closeStudentPerformance() {
+        // Esconde detalhes
+        document.getElementById('pedagogue-student-detail-view').classList.add('hidden');
+        
+        // Mostra navegação e volta para a aba de alunos
+        document.getElementById('pedagogue-tabs-nav').classList.remove('hidden');
+        document.getElementById('pedagogue-view-students').classList.remove('hidden');
+    }
+
+    // Listener de busca (mantido)
+    const pedSearchGlobal = document.getElementById('ped-student-search-global');
+    if(pedSearchGlobal) {
+        pedSearchGlobal.addEventListener('input', renderPedagogueStudents);
     }
 </script>
 
