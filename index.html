@@ -2305,23 +2305,28 @@
     }
 
     // --- AÇÕES: ADICIONAR ALUNO ---
-    const pedAddStudentModal = document.getElementById('ped-add-student-modal');
-    
     function openAddStudentModal() {
+        // Busca o elemento no momento do clique, garantindo que ele existe
+        const modal = document.getElementById('ped-add-student-modal');
+        
         populateAddStudentList();
-        pedAddStudentModal.classList.remove('hidden');
+        if(modal) modal.classList.remove('hidden');
     }
 
     function populateAddStudentList(filter = '') {
         const container = document.getElementById('ped-available-students-list');
+        if (!container) return; // Proteção extra
+        
         container.innerHTML = '';
         const f = filter.toLowerCase();
 
         // Pega todos os alunos disponíveis
         const allStudents = mockData.availableStudents || [];
         
-        // Filtra alunos que JÁ estão na turma (comparação simples por nome para o protótipo)
-        // No sistema real usaria IDs
+        // Garante que currentPedagogueClass existe
+        if (!currentPedagogueClass || !currentPedagogueClass.studentList) return;
+
+        // Filtra alunos que JÁ estão na turma
         const currentStudentNames = currentPedagogueClass.studentList.map(s => {
             const parts = s.match(/(.*)\s\((.*)\)/);
             return parts ? parts[1].trim() : s.trim();
@@ -2346,10 +2351,13 @@
         });
     }
 
-    // Search no modal
-    document.getElementById('ped-add-student-search')?.addEventListener('input', (e) => {
-        populateAddStudentList(e.target.value);
-    });
+    // Search no modal (Adicionado verificação se o elemento existe)
+    const searchInput = document.getElementById('ped-add-student-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            populateAddStudentList(e.target.value);
+        });
+    }
 
     function saveAddedStudents() {
         const checkboxes = document.querySelectorAll('.ped-student-checkbox:checked');
@@ -2358,10 +2366,11 @@
             return;
         }
 
+        if (!currentPedagogueClass) return;
+
         checkboxes.forEach(cb => {
-            // Adiciona ao array da turma
-            // Simulando um grau de deficiência já que o mock availableStudents não tem essa info
             const name = cb.value;
+            // Simulando um grau de deficiência randômico para o protótipo
             const mockDisabilities = ['Leve', 'Moderado']; 
             const randomDisability = mockDisabilities[Math.floor(Math.random() * mockDisabilities.length)];
             
@@ -2372,7 +2381,9 @@
         currentPedagogueClass.students = currentPedagogueClass.studentList.length;
 
         // Fecha modal e atualiza tela
-        pedAddStudentModal.classList.add('hidden');
+        const modal = document.getElementById('ped-add-student-modal');
+        if(modal) modal.classList.add('hidden');
+        
         renderPedagogueClassDetails();
         alert(`${checkboxes.length} aluno(s) adicionado(s) com sucesso.`);
     }
